@@ -1,0 +1,21 @@
+[package]
+name = "tagrs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.91"
+axum = "0.7.7"
+axum-insights = "0.4.0"
+clap = { version = "4.5.20", features = ["env", "derive"] }
+hex = "0.4.3"
+maud = { version = "0.26.0", features = ["axum"] }
+opentelemetry_sdk = "0.26.0"
+serde = { version = "1.0.213", features = ["derive"] }
+sha1 = "0.10.6"
+thiserror = "1.0.65"
+tokio = { version = "1.41.0", features = ["full"] }
+tower-http = { version = "0.6.1", features = ["fs", "trace", "tracing"] }
+tracing = { version = "0.1.40", features = ["log"] }
+tracing-subscriber = "0.3.18"
+uuid = { version = "1.11.0", features = ["v4", "sha1"] }

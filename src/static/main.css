@@ -1,0 +1,44 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+}
+
+header h1 {
+  display: inline-block;
+}
+
+header button#reload {
+  display: inline-block;
+}
+
+#movie-list {
+  display: flex;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+
+.movie {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin: 10px;
+  width: 250px;
+}
+
+.movie h2 {
+  height: 3em;
+}
+
+.movie img {
+  height: 300px;
+  max-width: 100%;
+}
+
+.movie .tags button {
+  margin: 5px;
+  padding: 3px;
+  /*border: 1px solid #ccc;*/
+  /*padding: 3px;*/
+  /*background-color: #f9f9f9;*/
+}
