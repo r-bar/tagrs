@@ -92,6 +92,7 @@ pub fn router(state: AppState) -> anyhow::Result<Router> {
     });
     let router = Router::new()
         .route("/", get(routes::index))
+        .route("/movies", get(routes::movie_list))
         .route("/movie/:id/poster.jpg", get(routes::movie_poster))
         .route("/movie/:id", get(routes::movie))
         .route("/movie/:id/tag/:tag", post(routes::toggle_tag))
@@ -108,14 +109,15 @@ mod routes {
     use super::*;
     use axum::body::Body;
     use axum::extract::Path as PathExtractor;
+    use axum::extract::Query;
     use axum::extract::State;
     use axum::response::Response;
     use maud::html;
     use maud::Markup;
 
     //#[tracing::instrument]
-    pub async fn index(State(state): State<AppState>) -> impl IntoResponse {
-        templates::index(&*state.collection.read().await)
+    pub async fn index(State(state): State<AppState>, Query(paging): Query<OptionalPaging>) -> impl IntoResponse {
+        templates::index(&*state.collection.read().await, paging.into())
     }
 
     //#[tracing::instrument]
@@ -208,5 +210,54 @@ mod routes {
         state.jellyfin_api.set_user_media_folders(&user, &user_folders).await?;
         user.policy["EnabledFolders"] = serde_json::to_value(&user_folders)?;
         templates::user_libraries_entry(&user, &folders)
+    }
+
+    pub async fn movie_list(
+        State(state): State<AppState>,
+        Query(paging): Query<OptionalPaging>,
+    ) -> Markup {
+        let collection = state.collection.read().await;
+        templates::movie_list(&collection, paging.into())
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq)]
+pub struct OptionalPaging {
+    page: Option<usize>,
+    per_page: Option<usize>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Copy, Clone, Eq, PartialEq, PartialOrd, Ord)]
+pub struct Paging {
+    page: usize,
+    per_page: usize,
+}
+
+impl From<OptionalPaging> for Paging {
+    fn from(paging: OptionalPaging) -> Self {
+        let default = Self::default();
+        Self {
+            page: paging.page.unwrap_or(default.page),
+            per_page: paging.per_page.unwrap_or(default.per_page),
+        }
+    }
+}
+
+impl Default for Paging {
+    fn default() -> Self {
+        Self {
+            page: 1,
+            per_page: 50,
+        }
+    }
+}
+
+impl Paging {
+    pub fn offset(&self) -> usize {
+        self.page.saturating_sub(1) * self.per_page
+    }
+
+    pub fn last_page(&self, total: usize) -> usize {
+        (total + self.per_page - 1) / self.per_page
     }
 }

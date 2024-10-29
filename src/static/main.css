@@ -46,3 +46,13 @@ header button#reload {
 .user-library {
   margin: 1em;
 }
+
+/*.paging {*/
+/*  display: flex;*/
+/*  justify-content: flex-end;*/
+/*  align-items: first baseline;*/
+/*}*/
+
+.paging > *:not(.spacer) {
+  max-width: 6em;
+}
