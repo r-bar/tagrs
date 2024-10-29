@@ -197,14 +197,20 @@ pub enum Error {
     NotFound,
     IO(std::io::Error),
     Other(anyhow::Error),
+    JellyfinError(String),
+    InvalidPath(String),
+    JsonEncodingError(serde_json::Error),
 }
 
 impl Display for Error {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Error::JellyfinError(msg) => write!(f, "Jellyfin error: {}", msg),
+            Error::InvalidPath(msg) => write!(f, "Invalid path: {}", msg),
             Error::IO(e) => write!(f, "IO error: {}", e),
             Error::Other(e) => write!(f, "{}", e),
             Error::NotFound => write!(f, "Not found"),
+            Error::JsonEncodingError(e) => write!(f, "Json encoding error: {}", e),
         }
     }
 }
@@ -229,6 +235,30 @@ impl IntoResponse for Error {
                 )
                     .into_response()
             }
+            Error::JellyfinError(e) => {
+                tracing::error!("jellyfin error: {:?}", e);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Jellyfin error: {}", e)
+                )
+                    .into_response()
+            }
+            Error::InvalidPath(e) => {
+                tracing::error!("invalid path: {:?}", e);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Invalid path: {}", e)
+                )
+                    .into_response()
+            }
+            Error::JsonEncodingError(e) => {
+                tracing::error!("json encoding error: {:?}", e);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("Json encoding error: {}", e)
+                )
+                    .into_response()
+            }
         }
     }
 }
@@ -248,5 +278,17 @@ impl From<hex::FromHexError> for Error {
 impl From<std::io::Error> for Error {
     fn from(e: std::io::Error) -> Self {
         Error::IO(e)
+    }
+}
+
+impl From<reqwest::Error> for Error {
+    fn from(e: reqwest::Error) -> Self {
+        Error::JellyfinError(format!("{}", e))
+    }
+}
+
+impl From<serde_json::Error> for Error {
+    fn from(e: serde_json::Error) -> Self {
+        Error::JsonEncodingError(e)
     }
 }

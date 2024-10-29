@@ -42,3 +42,7 @@ header button#reload {
   /*padding: 3px;*/
   /*background-color: #f9f9f9;*/
 }
+
+.user-library {
+  margin: 1em;
+}
