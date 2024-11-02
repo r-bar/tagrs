@@ -38,20 +38,11 @@ header button#reload {
 .movie .tags button {
   margin: 5px;
   padding: 3px;
-  /*border: 1px solid #ccc;*/
-  /*padding: 3px;*/
-  /*background-color: #f9f9f9;*/
 }
 
 .user-library {
   margin: 1em;
 }
-
-/*.paging {*/
-/*  display: flex;*/
-/*  justify-content: flex-end;*/
-/*  align-items: first baseline;*/
-/*}*/
 
 .paging > *:not(.spacer) {
   max-width: 6em;

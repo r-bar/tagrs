@@ -45,27 +45,21 @@ pub fn paging_controls(url: &str, paging: Paging, total_items: usize) -> Markup 
     html! {
         div .paging role="group" {
             div .spacer {}
-            select
-                name="per_page"
-                {
-                    @for per_page in per_page_options {
-                        option
-                            hx-get={(url) "?page=1&per_page=" (per_page)}
-                            hx-push-url={"?page=1&per_page=" (per_page)}
-                            hx-target="main"
-                            value=(per_page)
-                            selected[per_page == paging.per_page]
-                            { (per_page) }
+            select name="per_page" {
+                @for per_page in per_page_options {
+                    option
+                        hx-get={(url) "?page=1&per_page=" (per_page)}
+                        hx-push-url={"?page=1&per_page=" (per_page)}
+                        hx-target="main"
+                        value=(per_page)
+                        selected[per_page == paging.per_page]
+                        { (per_page) }
                 }
             }
             button
                 .secondary
-                //hx-params="*"
-                //hx-get={(url) "?page=1"}
                 hx-get=(url)
                 hx-target="main"
-                //hx-push-url="true"
-                //hx-push-url=(push_url)
                 hx-push-url={"?page=1&per_page=" (paging.per_page)}
                 name="page"
                 value="1"
@@ -73,11 +67,8 @@ pub fn paging_controls(url: &str, paging: Paging, total_items: usize) -> Markup 
                 { "<<" }
             button
                 .secondary
-                //hx-params="*"
-                //hx-get={(url) "?page=" (prev_page)}
                 hx-get=(url)
                 hx-target="main"
-                //hx-push-url=(push_url)
                 hx-push-url={"?page=" (prev_page) "&per_page=" (paging.per_page)}
                 name="page"
                 value=(prev_page)
@@ -85,11 +76,9 @@ pub fn paging_controls(url: &str, paging: Paging, total_items: usize) -> Markup 
                 { "<" }
             input
                 .num-select
-                //hx-params="*"
                 hx-get=(url)
                 hx-trigger="changed click"
                 hx-target="main"
-                //hx-push-url=(push_url)
                 type="number"
                 name="page"
                 value=(paging.page)
@@ -98,12 +87,8 @@ pub fn paging_controls(url: &str, paging: Paging, total_items: usize) -> Markup 
             button
                 type="submit"
                 .secondary
-                //hx-params="*"
-                //hx-get={(url) "?page=" (next_page)}
                 hx-get=(url)
                 hx-target="main"
-                //hx-push-url="true"
-                //hx-push-url=(push_url)
                 hx-push-url={"?page=" (next_page) "&per_page=" (paging.per_page)}
                 name="page"
                 value=(next_page)
@@ -112,12 +97,8 @@ pub fn paging_controls(url: &str, paging: Paging, total_items: usize) -> Markup 
             button
                 type="submit"
                 .secondary
-                //hx-params="*"
-                //hx-get={(url) "?page=" (last_page)}
                 hx-get=(url)
                 hx-target="main"
-                //hx-push-url="true"
-                //hx-push-url=(push_url)
                 hx-push-url={"?page=" (last_page) "&per_page=" (paging.per_page)}
                 name="page"
                 value=(last_page)
