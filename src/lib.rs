@@ -22,7 +22,9 @@ use collection::Error;
 use collection::PathnameHash;
 use templates::MISSING_POSTER;
 
+/// Admin dashboard for managing your Jellyfin collection
 #[derive(Debug, Parser)]
+#[command(version, about)]
 pub struct Cli {
     #[clap(short, long, default_value = "127.0.0.1:3000")]
     pub bind: String,
