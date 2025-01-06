@@ -20,6 +20,7 @@ jobs:
             archive: zip
     steps:
       - uses: actions/checkout@master
+
       - name: Compile and release
         uses: rust-build/rust-build.action@v1.4.5
         env:
@@ -27,3 +28,19 @@ jobs:
         with:
           RUSTTARGET: ${{ matrix.target }}
           ARCHIVE_TYPES: ${{ matrix.archive }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: 'r-bar/tagrs:latest,r-bar/tagrs:${{ github.event.release.name }}'
