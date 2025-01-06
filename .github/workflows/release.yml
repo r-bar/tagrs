@@ -44,24 +44,24 @@ jobs:
           push: true
           tags: 'ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ env.TAG_NAME }},ghcr.io/${{ github.repository }}:${{ env.SHORT_SHA }}'
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: Release ${{ env.TAG_NAME }}
-          body: |
-            Short SHA: ${{ env.SHORT_SHA }}
-            Full SHA: ${{ github.head }}
-          draft: false
-          prerelease: false
+      #- name: Create Release
+      #  id: create_release
+      #  uses: actions/create-release@latest
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      #  with:
+      #    tag_name: ${{ env.TAG_NAME }}
+      #    release_name: Release ${{ env.TAG_NAME }}
+      #    body: |
+      #      Short SHA: ${{ env.SHORT_SHA }}
+      #      Full SHA: ${{ github.head }}
+      #    draft: false
+      #    prerelease: false
 
-      - name: Compile and release
-        uses: rust-build/rust-build.action@v1.4.5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          RUSTTARGET: ${{ matrix.target }}
-          ARCHIVE_TYPES: ${{ matrix.archive }}
+      #- name: Compile and add artifacts to release
+      #  uses: rust-build/rust-build.action@v1.4.5
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  with:
+      #    RUSTTARGET: ${{ matrix.target }}
+      #    ARCHIVE_TYPES: ${{ matrix.archive }}
