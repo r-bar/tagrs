@@ -50,4 +50,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: 'r-bar/tagrs:latest,r-bar/tagrs:${{ env.TAG_NAME }},r-bar/tagrs:${{ env.SHORT_SHA }}'
+          tags: 'ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ env.TAG_NAME }},ghcr.io/${{ github.repository }}:${{ env.SHORT_SHA }}'
