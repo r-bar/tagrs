@@ -1,8 +1,9 @@
 # .github/workflows/release.yml
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   release:
@@ -22,8 +23,23 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+
       - name: Compile and release
-        uses: rust-build/rust-build.action@v1.4.5
+        uses: rust-build/rust-build.action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -44,4 +60,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: 'r-bar/tagrs:latest,r-bar/tagrs:${{ github.event.release.name }}'
+          tags: 'r-bar/tagrs:latest,r-bar/tagrs:${{ github.ref }}'
