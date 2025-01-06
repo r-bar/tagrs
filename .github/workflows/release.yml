@@ -23,20 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          body: |
-            Changes in this Release
-            - First Change
-            - Second Change
-          draft: false
-          prerelease: false
+      - name: Get short SHA and tag name
+        run: |
+          export TAG_NAME=$(echo ${{ github.ref }} | sed 's#refs/tags/\(.*\)#\1#')
+          export SHORT_SHA=$(git rev-parse --short ${{ github.ref }})
 
       - name: Compile and release
         uses: rust-build/rust-build.action@v1.4.5
@@ -60,4 +50,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: 'r-bar/tagrs:latest,r-bar/tagrs:${{ github.ref }}'
+          tags:
+            - 'r-bar/tagrs:latest'
+            - 'r-bar/tagrs:${{ env.TAG_NAME }}'
+            - 'r-bar/tagrs:${{ env.SHORT_SHA }}'
